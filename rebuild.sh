@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 
-sudo cp -r ~/.config/nixos/* /etc/nixos/
-sudo nixos-rebuild switch
+# Ensure we're in the right directory
+cd /etc/nixos
+
+# Copy configuration files
+sudo cp -r ~/nixos/* /etc/nixos/
+
+# Rebuild the system using flakes
+sudo nixos-rebuild switch --flake .#nixos

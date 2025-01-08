@@ -4,9 +4,20 @@
     ./hardware-configuration.nix
   ];
 
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Boot configuration
+  boot = {
+    loader = {
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+      };
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
+      };
+      timeout = 3;
+    };
+  };
 
   # Networking
   networking = {
@@ -75,6 +86,12 @@
     interval = "weekly";
   };
 
+  # Location settings (used by redshift)
+  location = {
+    latitude = 50.0755;
+    longitude = 14.4378;
+  };
+
   # Security
   security = {
     rtkit.enable = true;
@@ -93,15 +110,15 @@
         enableContribAndExtras = true;
       };
     };
-    
+
     libinput = {
-      enable = true;
-      touchpad = {
-        naturalScrolling = true;
-        tapping = true;
-        scrollMethod = "twofinger";
+        enable = true;
+        touchpad = {
+          naturalScrolling = true;
+          tapping = true;
+          scrollMethod = "twofinger";
+        };
       };
-    };
 
     printing.enable = true;
     blueman.enable = true;
@@ -126,8 +143,6 @@
         day = 5500;
         night = 3700;
       };
-      latitude = "50.0755";   # Prague coordinates
-      longitude = "14.4378";
     };
     
     upower.enable = true;
@@ -138,9 +153,9 @@
 
   # Fonts
   fonts = {
-    enableDefaultFonts = true;
+    enableDefaultPackages = true;
     fontDir.enable = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji
@@ -165,41 +180,21 @@
       "network-manager"
       "audio"
     ];
-    packages = with pkgs; [
-      tree
-      firefox-devedition
-      ungoogled-chromium
-      transmission_4-gtk
-      libreoffice-fresh
-      gimp
-      neovim
-      emacs
-      vlc
-      telegram-desktop
-      nchat
-    ];
   };
 
-  # System packages
+  # System packages (only system-wide tools)
   environment.systemPackages = with pkgs; [
     # Base utilities
-    python3
     git
     wget
     xclip
     
     # System monitoring and management
     htop
-    ripgrep
-    fd
-    bat
-    nixfmt
+    nixfmt-classic
     gnumake
-    unzip
-    zip
 
     # X11 and window management
-    alacritty
     dmenu
     rofi
     xmonad-with-packages
