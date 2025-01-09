@@ -4,4 +4,6 @@
 !**/*.sh
 !**/*.hs
 
+hardware-configuration.nix
+
 !.gitignore
