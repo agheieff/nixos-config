@@ -205,22 +205,18 @@
     dunst
     haskellPackages.xmonad-contrib
     haskellPackages.xmonad-extras
-    
-    # Network management
+
     networkmanagerapplet
-    
-    # Audio
+
     pasystray
     pamixer
     pulseaudio
     alsa-utils
-    
-    # System tray utilities
+
     blueman
     udiskie
     redshift
-    
-    # Hardware control
+
     brightnessctl
   ];
 

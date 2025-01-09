@@ -10,6 +10,8 @@
 
   # Start with just packages, no config management
   home.packages = with pkgs; [
+    alacritty
+    neovim
     firefox-devedition
     ungoogled-chromium
     transmission_4-gtk
@@ -19,4 +21,6 @@
     telegram-desktop
     nchat
   ];
+
+  xdg.configFile."xmonad/xmonad.hs".source = ./xmonad.hs;
 }
