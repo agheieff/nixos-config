@@ -1,6 +1,5 @@
 import XMonad
 import qualified Data.Map as M  -- Import Data.Map for defining keybindings
-
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -17,6 +16,8 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Renamed
 import XMonad.Layout.WindowNavigation
 import XMonad.Actions.Navigation2D
+
+import Graphics.X11.ExtraTypes.XF86
 
 -- Main configuration
 main :: IO ()
@@ -52,12 +53,12 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     , ((modm, xK_p), spawn "rofi -show drun")  -- Application launcher
     , ((modm .|. shiftMask, xK_p), spawn "rofi -show window")  -- Window switcher
 
-    -- , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
-    -- , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
-    -- , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+    , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+    , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
+    , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
 
-    -- , ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl set +10%")
-    -- , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
+    , ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl set +10%")
+    , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
     ]
 
 -- Layout configuration
