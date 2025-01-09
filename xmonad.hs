@@ -1,4 +1,5 @@
 import XMonad
+import qualified Data.Map as M  -- Import Data.Map for defining keybindings
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -26,35 +27,40 @@ main = xmonad
      $ myConfig
 
 myConfig = def
-    { modMask    = mod4Mask
+    { modMask    = mod4Mask  -- Use Super key as the modifier
     , layoutHook = myLayout
     , manageHook = myManageHook
     , startupHook = myStartupHook
     , terminal = "alacritty"
+    , keys = myKeys  -- Override default keys with custom keybindings
     }
-  `additionalKeysP`
-    [
-      ("M-w", windowGo U False)
-    , ("M-a", windowGo L False)
-    , ("M-r", windowGo D False)
-    , ("M-s", windowGo R False)
 
-    , ("M-S-w", windowSwap U False)  -- Up
-    , ("M-S-a", windowSwap L False)  -- Left
-    , ("M-S-r", windowSwap D False)  -- Down
-    , ("M-S-s", windowSwap R False)  -- Right
-    
-    , ("M-p", spawn "rofi -show drun")
-    , ("M-S-p", spawn "rofi -show window")
-    
-    , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
-    , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
-    , ("<XF86AudioMute>", spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-    
-    , ("<XF86MonBrightnessUp>", spawn "brightnessctl set +10%")
-    , ("<XF86MonBrightnessDown>", spawn "brightnessctl set 10%-")
+-- Custom keybindings
+myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+myKeys conf@(XConfig {modMask = modm}) = M.fromList $
+    [
+      ((modm, xK_w), windowGo U False)  -- Move focus up
+    , ((modm, xK_a), windowGo L False)  -- Move focus left
+    , ((modm, xK_r), windowGo D False)  -- Move focus down
+    , ((modm, xK_s), windowGo R False)  -- Move focus right
+
+    , ((modm .|. shiftMask, xK_w), windowSwap U False)  -- Swap window up
+    , ((modm .|. shiftMask, xK_a), windowSwap L False)  -- Swap window left
+    , ((modm .|. shiftMask, xK_r), windowSwap D False)  -- Swap window down
+    , ((modm .|. shiftMask, xK_s), windowSwap R False)  -- Swap window right
+
+    , ((modm, xK_p), spawn "rofi -show drun")  -- Application launcher
+    , ((modm .|. shiftMask, xK_p), spawn "rofi -show window")  -- Window switcher
+
+    -- , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+    -- , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
+    -- , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+
+    -- , ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl set +10%")
+    -- , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
     ]
 
+-- Layout configuration
 myLayout = windowNavigation $ renamed [Replace "Tall"] tiled
        ||| windowNavigation (renamed [Replace "Mirror"] (Mirror tiled))
        ||| renamed [Replace "Full"] Full
