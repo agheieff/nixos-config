@@ -1,9 +1,9 @@
 *
 
+hardware-configuration.nix
+
 !**/*.nix
 !**/*.sh
 !**/*.hs
-
-hardware-configuration.nix
 
 !.gitignore
