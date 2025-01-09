@@ -19,47 +19,42 @@ import XMonad.Actions.Navigation2D
 
 -- Main configuration
 main :: IO ()
-:qmain = xmonad
+main = xmonad
      . ewmhFullscreen
      . ewmh
      . withEasySB (statusBarProp "xmobar" (pure myXmobarPP)) defToggleStrutsKey
      $ myConfig
 
 myConfig = def
-    { modMask    = mod4Mask      -- Rebind Mod to the Super key (Win)
-    , layoutHook = myLayout      -- Use custom layouts
-    , manageHook = myManageHook  -- Match on certain windows
+    { modMask    = mod4Mask
+    , layoutHook = myLayout
+    , manageHook = myManageHook
     , startupHook = myStartupHook
-    , terminal = "alacritty"     -- Default terminal
+    , terminal = "alacritty"
     }
   `additionalKeysP`
-    [ -- Directional navigation (Colemak)
-      ("M-w", windowGo U False)  -- Up
-    , ("M-a", windowGo L False)  -- Left
-    , ("M-r", windowGo D False)  -- Down
-    , ("M-s", windowGo R False)  -- Right
+    [
+      ("M-w", windowGo U False)
+    , ("M-a", windowGo L False)
+    , ("M-r", windowGo D False)
+    , ("M-s", windowGo R False)
+
+    , ("M-S-w", windowSwap U False)  -- Up
+    , ("M-S-a", windowSwap L False)  -- Left
+    , ("M-S-r", windowSwap D False)  -- Down
+    , ("M-S-s", windowSwap R False)  -- Right
     
-    -- Window movement (Colemak)
-    , ("M-S-n", windowSwap L False)  -- Left
-    , ("M-S-e", windowSwap U False)  -- Up
-    , ("M-S-i", windowSwap D False)  -- Down
-    , ("M-S-o", windowSwap R False)  -- Right
+    , ("M-p", spawn "rofi -show drun")
+    , ("M-S-p", spawn "rofi -show window")
     
-    -- Applications
-    , ("M-p", spawn "dmenu_run")  -- Application launcher
-    , ("M-S-p", spawn "rofi -show window")  -- Window switcher
-    
-    -- Audio controls (using pipewire)
     , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
     , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
     , ("<XF86AudioMute>", spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
     
-    -- Brightness controls
     , ("<XF86MonBrightnessUp>", spawn "brightnessctl set +10%")
     , ("<XF86MonBrightnessDown>", spawn "brightnessctl set 10%-")
     ]
 
--- Layout configuration
 myLayout = windowNavigation $ renamed [Replace "Tall"] tiled
        ||| windowNavigation (renamed [Replace "Mirror"] (Mirror tiled))
        ||| renamed [Replace "Full"] Full
@@ -82,13 +77,10 @@ myManageHook = composeAll
 -- Startup hook
 myStartupHook :: X ()
 myStartupHook = do
-    -- Set caps lock as escape
     spawn "setxkbmap -option caps:escape"
-    -- Start system tray with better configuration
     spawnOnce "trayer --edge top --align right --SetDockType true --SetPartialStrut true \
              \--expand true --width 10 --transparent true --tint 0x282a36 --height 22 \
              \--distance 1 --distancefrom right --iconspacing 5 --alpha 0"
-    -- Start common system tray applications
     spawnOnce "nm-applet"  -- Network Manager
     spawnOnce "pasystray"  -- PulseAudio/PipeWire control
     spawnOnce "blueman-applet"  -- Bluetooth
@@ -113,7 +105,6 @@ myXmobarPP = def
     ppWindow :: String -> String
     ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
 
-    -- Colors
     blue, lowWhite, magenta, red, white, yellow :: String -> String
     magenta  = xmobarColor "#ff79c6" ""
     blue     = xmobarColor "#bd93f9" ""

@@ -197,6 +197,7 @@
     # X11 and window management
     dmenu
     rofi
+    rofi-emoji
     xmonad-with-packages
     xmobar
     trayer
