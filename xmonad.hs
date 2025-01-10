@@ -1,11 +1,13 @@
 import XMonad
-import qualified Data.Map as M  -- Import Data.Map for defining keybindings
+import qualified Data.Map as M
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.EwmhDesktops
+
+import XMonad.StackSet as W
 
 import XMonad.Util.EZConfig
 import XMonad.Util.Loggers
@@ -40,18 +42,17 @@ myConfig = def
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {modMask = modm}) = M.fromList $
     [
-      ((modm, xK_w), windowGo U False)  -- Move focus up
-    , ((modm, xK_a), windowGo L False)  -- Move focus left
-    , ((modm, xK_r), windowGo D False)  -- Move focus down
-    , ((modm, xK_s), windowGo R False)  -- Move focus right
+      ((modm, xK_w), windowGo U False)
+    , ((modm, xK_a), windowGo L False)
+    , ((modm, xK_r), windowGo D False)
+    , ((modm, xK_s), windowGo R False)
 
-    , ((modm .|. shiftMask, xK_w), windowSwap U False)  -- Swap window up
-    , ((modm .|. shiftMask, xK_a), windowSwap L False)  -- Swap window left
-    , ((modm .|. shiftMask, xK_r), windowSwap D False)  -- Swap window down
-    , ((modm .|. shiftMask, xK_s), windowSwap R False)  -- Swap window right
+    , ((modm .|. shiftMask, xK_w), windowSwap U False)
+    , ((modm .|. shiftMask, xK_a), windowSwap L False)
+    , ((modm .|. shiftMask, xK_r), windowSwap D False)
+    , ((modm .|. shiftMask, xK_s), windowSwap R False)
 
-    , ((modm, xK_p), spawn "rofi -show drun")  -- Application launcher
-    , ((modm .|. shiftMask, xK_p), spawn "rofi -show window")  -- Window switcher
+    , ((modm, xK_p), spawn "rofi -show drun")
 
     , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
     , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
@@ -59,9 +60,30 @@ myKeys conf@(XConfig {modMask = modm}) = M.fromList $
 
     , ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl set +10%")
     , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
+
+    , ((modm, xK_1), windows $ W.greedyView "1")
+    , ((modm, xK_2), windows $ W.greedyView "2")
+    , ((modm, xK_3), windows $ W.greedyView "3")
+    , ((modm, xK_4), windows $ W.greedyView "4")
+    , ((modm, xK_5), windows $ W.greedyView "5")
+    , ((modm, xK_6), windows $ W.greedyView "6")
+    , ((modm, xK_7), windows $ W.greedyView "7")
+    , ((modm, xK_8), windows $ W.greedyView "8")
+    , ((modm, xK_9), windows $ W.greedyView "9")
+    , ((modm, xK_0), windows $ W.greedyView "0")
+
+    , ((modm .|. shiftMask, xK_1), windows $ W.shift "1")
+    , ((modm .|. shiftMask, xK_2), windows $ W.shift "2")
+    , ((modm .|. shiftMask, xK_3), windows $ W.shift "3")
+    , ((modm .|. shiftMask, xK_4), windows $ W.shift "4")
+    , ((modm .|. shiftMask, xK_5), windows $ W.shift "5")
+    , ((modm .|. shiftMask, xK_6), windows $ W.shift "6")
+    , ((modm .|. shiftMask, xK_7), windows $ W.shift "7")
+    , ((modm .|. shiftMask, xK_8), windows $ W.shift "8")
+    , ((modm .|. shiftMask, xK_9), windows $ W.shift "9")
+    , ((modm .|. shiftMask, xK_0), windows $ W.shift "0")
     ]
 
--- Layout configuration
 myLayout = windowNavigation $ renamed [Replace "Tall"] tiled
        ||| windowNavigation (renamed [Replace "Mirror"] (Mirror tiled))
        ||| renamed [Replace "Full"] Full
@@ -69,9 +91,9 @@ myLayout = windowNavigation $ renamed [Replace "Tall"] tiled
   where
     threeCol = magnifiercz' 1.3 $ ThreeColMid nmaster delta ratio
     tiled    = Tall nmaster delta ratio
-    nmaster  = 1      -- Default number of windows in the master pane
-    ratio    = 1/2    -- Default proportion of screen occupied by master pane
-    delta    = 3/100  -- Percent of screen to increment by when resizing panes
+    nmaster  = 1
+    ratio    = 1/2
+    delta    = 3/100
 
 -- Window management
 myManageHook :: ManageHook
